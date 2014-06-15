@@ -1,0 +1,9 @@
+function [ndata,text] = zack1(filename) 
+[ndata,text] = xlsread(filename)
+% q=(2*pi)./ndata;
+% q_lower_bound = (q - .37);
+% q_upper_bound = (q + .3); 
+% 
+% int_text=integrate_annulus_basic(text(1),[q_lower_bound,q_upper_bound])
+% % int_text=integrate_annulus_basic(text(2),[q_lower_bound,q_upper_bound]);
+

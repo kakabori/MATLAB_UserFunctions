@@ -1,0 +1,62 @@
+%% This needs work.
+
+function [ I_0 ] = abs_corr2(imag, t, mu, alpha_d)
+%abs_corr Absorption-correct the input image that is obtained at a fixed
+%angle of incidence. The path length is calculated on average.
+%   Calculate the absorption for a given sample thickness, attenuation
+%   length, and fixed angle of incidence. Then, invert the absorption and
+%   correct the input image for the absorption factor. Finally, display the
+%   corrected image.
+
+%   imag -> CCD experimental data
+%   t -> thickness of the sample
+%   mu -> attenuation length of X-ray in the sample
+%   alpha_d -> angle of incidence
+%   colorscale -> gray scale for displaying the corrected image
+
+global X_cen Y_cen; global Spec_to_Phos;
+
+a=deg2rad(alpha_d);
+
+[m n] = size(imag);
+
+px = 1:n;
+x = px - Y_cen;
+len_x = length(x);
+
+pz = 1:m;  
+z = X_cen - pz;
+len_z = length(z);
+
+x2 = repmat(x,[len_z,1]);
+z2 = repmat(z',[1,len_x]);
+
+phi = atan(z2./x2);
+th = 0.5 * atan(sqrt( (x2.^2+z2.^2)/Spec_to_Phos^2 ));
+
+A = find(-sin(a)*cos(2*th) + cos(a)*sin(2*th).*sin(phi) < 0);
+%unphysical result, that is, a negative path length of a photon after a 
+%scattering event, will be stored in the variable A.
+g = 1/sin(a) + 1./( -sin(a)*cos(2*th) + cos(a)*sin(2*th).*sin(phi) );
+
+I_meas = exp(-g*t/(2*mu));
+
+I_0 = imag ./ I_meas;
+I_0(A) = 0;%elements with unphysical result will be assigned a value zero.
+I_0(X_cen,Y_cen)=0;%intensity at the beam is set to zero.
+
+%figure; colormap gray;
+%imagesc(I_0,colorscale);
+%imagesc(px,pz,I_0,colorscale);
+%set(gca,'xtick',min(px):200:max(px));
+%set(gca,'ytick',min(pz):200:max(pz));
+%set(gca,'xticklabel',min(px):200:max(px));
+%set(gca,'yticklabel',min(pz):200:max(pz));
+%set(gca,'tickdir','out');
+%set(gca,'xminortick','on');
+%set(gca,'yminortick','on');
+%axis image;axis xy;
+
+
+end
+

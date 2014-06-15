@@ -1,0 +1,69 @@
+function [ret a] = gamma2Lorentz(gamma, x, y)
+%[ret a] = gamma2Lorentz(gamma, x, y)
+%This function returns approximated 2D Lorentzian as a function of x and y with HWHM = gamma. 
+%It essentially calculates the following function at the values specified by input vectors, x and y:
+%
+%(1/pi) * gamma / (x^2 + y^2 + gamma^2)
+%
+%It calculates the above function by approximating it with seven Gaussians and a constant,
+%the total number of parameters being 15. The approximation is utilized in NFIT to calculate
+%structure factors with nonzero mosaic spread. gamma2Lorentz function is useful for checking
+%how good the approximation is for a given value of gamma at various sets of x and y values.
+%
+%Use: [ret a] = gamma2Lorentz(0.00009, xvec, 0)
+%Use: [ret a] = gamma2Lorentz(0.00009, xvec, yvec)
+%
+% x -> row vector (can be a single number)
+% y -> row vector (can be a single number)
+% gamma -> a postive number
+% ret -> a row vector containing values of the function calculated at points specified by x and y
+%
+%Two sets of Gaussian parameters have been derived so far. One set is optimed for 
+%0.00625 <= gamma <= 0.1 and another for 0.00009 <= gamma <= 0.002.
+
+if gamma >= 0.004
+    mAmp(1,1) = 0.112856519744435 * gamma ^ -0.999755555419778;
+    mAmp(1,2) = 0.0465847101749735 * gamma ^ -1.00037889545012;
+    mAmp(1,3) = 0.00506789800552745 * gamma ^ -1.0012858935536;
+    mAmp(1,4) = 0.0396935336061412 * gamma ^ -0.999687749832321;
+    mAmp(1,5) = 0.0169725529495295 * gamma ^ -1.00084692133268;
+    mAmp(1,6) = 0.0956980481655655 * gamma ^ -0.999995222077984;
+    mAmp(1,7) = 0.00125937949015476 * gamma ^ -1.00129569980249;
+
+    mSigma(1,1) = -2.80116602274783*10^-7 + 0.6388620693977 * gamma;
+    mSigma(1,2) = -3.15104299819513*10^-6 + 1.84791940342407 * gamma;
+    mSigma(1,3) = -1.95280083166161*10^-5 + 6.82305590384938 * gamma;
+    mSigma(1,4) = -5.36695632796791*10^-8 + 0.393421240233968 * gamma;
+    mSigma(1,5) = -8.38186244167538*10^-6 + 3.40560840003478 * gamma;
+    mSigma(1,6) = -1.03843164467321*10^-6 + 1.06310794377509 * gamma;
+    mSigma(1,7) = -3.91733006961381*10^-5 + 16.1151492048769 * gamma;
+
+    mOffset = 1.32441128430871*10^-4 * gamma ^ -1.00080804064086;
+else
+    mAmp(1,1) = 0.034002303941635 * gamma ^ -1.01604838547552;
+    mAmp(1,2) = 0.110475332261599 * gamma ^ -1.00227852717198;
+    mAmp(1,3) = 0.10054124233102 * gamma ^ -0.994880230814295;
+    mAmp(1,4) = 0.00521728193512268 * gamma ^ -0.997012363323735;
+    mAmp(1,5) = 0.0494534712249131 * gamma ^ -0.993681261967453;
+    mAmp(1,6) = 0.0177320826256448 * gamma ^ -0.995321936553314;
+    mAmp(1,7) = 0.00128365606096352 * gamma ^ -0.998221067152376;
+
+    mSigma(1,1) = -2.64463793618429*10^-7 + 0.393389609552207 * gamma;
+    mSigma(1,2) = -4.11723113645643*10^-7 + 0.638673192522838 * gamma;
+    mSigma(1,3) = -3.09919878528696*10^-7 + 1.06238797371111 * gamma;
+    mSigma(1,4) = 4.2848308130978*10^-6 + 6.81095368298297 * gamma;
+    mSigma(1,5) = 3.98473309726568*10^-7 + 1.84577031900781 * gamma;
+    mSigma(1,6) = 1.9575627818551*10^-6 + 3.4001442750857 * gamma;
+    mSigma(1,7) = 7.24758922318949*10^-6 + 16.0917505189129 * gamma;
+
+    mOffset = 1.33872137456508*10^-4 * gamma ^ -0.99905038043827;
+end
+
+
+ret = 0;
+for i = 1 : 7
+    ret = ret + mAmp(1,i)*exp(-(x.^2+y.^2)/(2*mSigma(1,i)^2));
+end
+ret = ret + mOffset;
+a = [mAmp mSigma mOffset];
+end

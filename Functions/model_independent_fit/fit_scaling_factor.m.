@@ -1,0 +1,9 @@
+function [ output_args ] = fitScalingFactor(params, xdata, ydata)
+%UNTITLED4 Summary of this function goes here
+%   Detailed explanation goes here
+
+
+[paramsfit, chisquare] = lsqcurvefit(@scalingFactor, params, xdata, ydata, [], [], options);
+
+end
+

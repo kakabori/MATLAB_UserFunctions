@@ -1,0 +1,13 @@
+function [qr,qz]=xz2qrqz(x,z,s,lamda,aph,pixel_size)
+len_x=length(x);
+len_z=length(z);
+x=x*pixel_size;
+z=z*pixel_size;
+aph=deg2rad(aph);
+x2=repmat(x,[len_z,1]);
+z2=repmat(z',[1,len_x]);
+s2=sqrt(x2.^2+z2.^2);
+theta=1/2*atan(s2/s);
+phi=acos(x2./s2).*sign(z2);
+qr=4*pi*sin(theta)/lamda.*sqrt(1-(cos(theta).*sin(phi)*cos(aph)+sin(theta)*sin(aph)).^2);
+qz=4*pi*sin(theta)/lamda.*(cos(theta).*sin(phi)*cos(aph)+sin(theta)*sin(aph));

@@ -1,0 +1,7 @@
+Model	Allometric1		
+Equation	y = a*x^b		
+Reduced Chi-Sqr	5.81393471090924E-6		
+Adj. R-Square	0.999989767574422		
+		Value	Standard Error
+z0	a	1.33872137456508E-4	8.23717172812454E-8
+z0	b	-0.99905038043827	6.46090282159608E-5
