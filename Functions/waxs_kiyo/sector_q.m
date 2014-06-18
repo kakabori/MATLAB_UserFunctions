@@ -1,6 +1,6 @@
 function result = sector_q(imag, q_range, phi_range, q_delta, phi_delta)
 %
-%This function will return intensity as a function of q along a constant value
+%This function returns intensity as a function of q along a constant value
 %of phi on a q-corrected image. The output will contain two column vectors, 
 %q and I. 
 %The program will first transform the input data in 

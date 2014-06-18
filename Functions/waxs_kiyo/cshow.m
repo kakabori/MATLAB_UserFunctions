@@ -1,5 +1,5 @@
 %Last updated: 8/10/2011 by KA
-function [ output_args ] = cshow(image,color_scale)
+function cshow(image,color_scale)
 %cshow This function opens an empty figure and plots a 1024-by-1024
 %intensity map in CCD-space. Use qshow if plotting an image in q-space is
 %desired. Use show if you want labels to be the actual matrix row and
@@ -10,7 +10,6 @@ function [ output_args ] = cshow(image,color_scale)
 
 px=[1:1024];%px sets the label for x axis. 
 py=[1:1024];
-figure;
 colormap gray;
 imagesc(px,py,image,color_scale);
 axis image;
