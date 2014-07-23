@@ -1,6 +1,6 @@
 %Last updated: 2/16/2012
-%qrplot_ka 
-%   
+%[qr, Intensity] = qrplot_q(img_struct, qz_range, varargin)
+%Use varargin to send in options for plotting
 function [qr, Int3] = qrplot_q(img_struct, qz_range, varargin)
 qr = img_struct.qr;
 qz = img_struct.qz;
@@ -17,5 +17,13 @@ Int3 = mean(Int2,1);
 fprintf('Intensity was integrated from qz=%g A^-1 to qz=%g A^-1,\n',qz(A),qz(B));
 fprintf('centered at %g. The number of points averaged is %d.\n',(qz(A)+qz(B))/2, numel(A:B));
 plot(qr,Int3,varargin{1:nargin-2});
+
+if isrow(qr)
+  qr = qr';
+end
+if isrow(Int3)
+  Int3 = Int3';
+end
+
 end
 

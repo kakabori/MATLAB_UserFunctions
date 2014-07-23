@@ -17,4 +17,12 @@ Int3 = mean(Int2,2);
 fprintf('Intensity was integrated from qr=%g A^-1 to qr=%g A^-1,\n',qr(A),qr(B));
 fprintf('centered at %g. The number of points averaged is %d.\n',(qr(A)+qr(B))/2, numel(A:B));
 plot(qz,Int3,varargin{1:nargin-2});
+
+if isrow(qz)
+  qz = qz';
+end
+if isrow(Int3)
+  Int3 = Int3';
+end
+
 end

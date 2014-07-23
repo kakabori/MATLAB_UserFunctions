@@ -33,17 +33,14 @@
 %Nagle's rotation motor.
 
 function result=transform_ccd2q(imag, qr_range, qz_range, delta_qr, ...
-                                delta_qz, alpha_d)
-global wavelength pixelSize sDist beamX beamZ
-X_cen = 1024 - beamZ + 1;
-Y_cen = beamX;
+                                delta_qz, alpha_d, beamX, beamZ)
+global wavelength pixelSize sDist X_cen Y_cen
+if nargin < 7
+  beamX = Y_cen;
+  beamZ = 1024 - X_cen + 1;
+end
 Spec_to_Phos = sDist / pixelSize;
 X_Lambda = wavelength;
-
-if (nargin<6)
-    alpha_d = 0.5; % Default angle of incidence is 0.5 deg, that is, 
-    %grazing angle of incidence for a typical WAXS experiment.
-end
 alpha_r=deg2rad(alpha_d);
 
 % Create the grid in qr-qz space. 
@@ -65,18 +62,19 @@ sin_theta(A)=10^(-8);%to avoid MATLAB complaining about division by zero.
 B=find(sin_theta==1);%This rarely happens for a typical range of qr and qz.
 sin_theta(B)=1-10^(-8);
 
-sin_phi=(X_Lambda*qz2/4/pi./sin_theta-sin_theta*sin(alpha_r))./sqrt(1-sin_theta.^2)/cos(alpha_r);
-indiceA=find(abs(sin_phi)>1);%these elements refer to points in q-space that 
-%are not accessible in experiment
+sin_phi=(X_Lambda*qz2/4/pi./sin_theta - sin_theta*sin(alpha_r)) ...
+        ./sqrt(1-sin_theta.^2)/cos(alpha_r);
+%these elements refer to points in q-space that are not accessible in experiment
+indiceA=find(abs(sin_phi)>1); 
 sin_phi(indiceA)=0;
 
-cos_2theta=1-2*sin_theta.^2;
-C=find(cos_2theta==0);
-cos_2theta(C)=10^(-8);
-tan_2theta=2*sin_theta.*sqrt(1-sin_theta.^2)./cos_2theta;
+cos_2theta = 1 - 2*sin_theta.^2;
+C = find(cos_2theta==0);
+cos_2theta(C) = 10^(-8);
+tan_2theta = 2*sin_theta.*sqrt(1-sin_theta.^2)./cos_2theta;
 
-X1=Y_cen+Spec_to_Phos*tan_2theta.*sqrt(1-sin_phi.^2);
-Y1=X_cen-Spec_to_Phos*tan_2theta.*sin_phi;
+X1 = beamX + Spec_to_Phos*tan_2theta.*sqrt(1-sin_phi.^2);
+Y1 = beamZ + Spec_to_Phos*tan_2theta.*sin_phi;
 
 %Interpolate at the points specified by the above rules.
 Int=interp2(imag,X1,Y1,'spline');
