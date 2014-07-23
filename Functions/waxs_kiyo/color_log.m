@@ -2,7 +2,7 @@
 %
 %Use    color_log([0 11000]);
 %
-%This function displays 2D image in gray log scale.
+%This function displays already plotted 2D image in gray log scale.
 
 function color_log(range)
 
