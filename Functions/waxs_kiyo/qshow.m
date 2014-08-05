@@ -18,10 +18,10 @@ colormap(gray); axis image; axis xy; %axis([1.3 2.0 0 0.5]);
 % Notation. [a:b:c] means tick marks will be placed between a and c with an
 % increment of b. For example, [-1:0.5:1] will generate marks at -1, -0.5,
 % 0, 0.5, and 1.
-set(gca,'xtick',min(struct.qr):0.3:max(struct.qr));
-set(gca,'ytick',min(struct.qz):0.5:max(struct.qz));
-set(gca,'xticklabel',min(struct.qr):0.3:max(struct.qr));
-set(gca,'yticklabel',min(struct.qz):0.5:max(struct.qz));
+set(gca,'xtick',min(struct.qr):0.1:max(struct.qr));
+set(gca,'ytick',min(struct.qz):0.1:max(struct.qz));
+set(gca,'xticklabel',min(struct.qr):0.1:max(struct.qr));
+set(gca,'yticklabel',min(struct.qz):0.1:max(struct.qz));
 set(gca,'tickdir','out');
 set(gca,'XMinorTick','on');
 set(gca,'YMinorTick','on');
