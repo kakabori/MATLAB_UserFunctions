@@ -11,6 +11,10 @@ addpath(genpath('/home/kiyo/MATLAB_UserFunctions/Functions/Downloaded'));
 % Data files
 addpath(genpath('/home/kiyo/data/chess11'));
 
+% Something we need for show command to work
+global MaskD
+MaskD = uint8(ones(1024, 1024));
+
 % Experiemntal setup
 wavelength = 1.176;
 pixelSize = 0.07113;
@@ -48,7 +52,7 @@ save_q(q_img);
 
 % Create and save a 2D image
 fig1 = figure;
-qshow(q_img, [0 500]);
+qshow(q_img, [0 1000]);
 %axis([1.3 1.7 0 0.6]);
 saveas(fig1, 'ripple.pdf');
 
@@ -62,13 +66,13 @@ figure
 [qr, Int] = qrplot_q(q_img, [0.19 0.21]);
 dlmwrite('ripple_qr.dat', [qr Int]);
 
-% Create and save q swath (sector plot)
+% Create and save q swath (radial plot)
 figure
-[q, Int] = sector_q(q_img, [1 2], [5 15]);
+[q, Int] = radial_q(q_img, [1 2], [5 15]);
 dlmwrite('ripple_10deg.dat', [q Int]);
 
 % Create and save phi swath (annular plot)
 figure
-[phi, Int] = integrate_annulus_q(q_img, [0 70], [1.3 1.6]);
+[phi, Int] = ring_q(q_img, [0 70], [1.3 1.6]);
 dlmwrite('ripple_phi.dat', [phi Int]);
 
