@@ -91,5 +91,9 @@ Int(B) = 0;
 Int(C) = 0;
 Int(D) = 0;
 
+% Convert floating data points to integer. Otherwise, the image is big, and
+% plotting might become slow.
+Int = int64(Int);
+
 result = struct('qr',qr,'qz',qz,'Int',Int,'delta_qr',delta_qr,'delta_qz',delta_qz);
 end
