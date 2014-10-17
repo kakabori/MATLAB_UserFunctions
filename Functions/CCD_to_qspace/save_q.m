@@ -10,18 +10,25 @@ qz = q_image.qz;
 img = q_image.Int;
 
 %% Save input image as a matrix
-imwrite(img, 'matrix.dat');
+dlmwrite('matrix.dat', img);
 
 %% Save qr and qz vectors
 if isrow(qr)
-    qr = qr'
+    qr = qr';
+end
 if isrow(qz)
-    qz = qz'
-dlmwrite('qrqz.dat', [qr qz]);
+    qz = qz';
+end
+dlmwrite('qr.dat', qr);
+dlmwrite('qz.dat', qz);
 
 %% Save as a three-column file for a contour plot in OriginPro
-[X, Y] = meshgrid(qr, qz)
-Z = img
+[X, Y] = meshgrid(qr, qz);
+Z = img;
+tmp_img = [];
 for k = 1:size(Z, 2)
-    tmp_img = [tmp_img; X(:,k) Y(:,k) Z(:,k)];
+    tmp_img = [tmp_img; X(:,k) Y(:,k) double(Z(:,k))];
+end
 dlmwrite('column.dat', tmp_img);    
+
+end

@@ -1,54 +1,47 @@
-%result=transform_ccd2q(imag,qr_range,qz_range,delta_qr,delta_qz,alpha_d)
+%result=transform_ccd2q(img,qr_range,qz_range,delta_q,omega,beamX,beamZ,Sdist,wavelength,pixelSize)
 %
 %Example:
-%result = transform_ccd2q(ripple,[0 2.2],[-1.1 1.1],0.0022,0.0022,0.5);
+%result = transform_ccd2q(ccd_img,[1.3 1.8],[0 0.8],0.0022,0.2,33,100,161.8,1.18,0.07113);
 %
 %This function transforms a CCD-space image into q-space image.
 %The angle of incidence is negative if the beam enters the sample from
-%the back of the substrate. For a typical WAXS experiment, where the beam 
-%hits lipids first, the angle of incidence is positive.
+%the back of the substrate (transmission geometry). 
+%In grazing incidence geometry, the angle of incidence is positive.
 %After the interpolation, the program will set the value of an element to
 %zero if the associated q-space is not accessible due to the way transmission
 %experiment is set up or simply outside the detector. For the latter
 %condition, 1024 by 1024 pixel-detector is assumed.
 %
-%imag -> The input CCD image.
-%
-%qr_range -> qr_range(1) and qr_range(2) specify the minimum and maximum 
-%value of qr at which intensity will be interpolated from the input CCD image.
-%
-%qz_range -> qz_range(1) and qz_range(2) specify the minimum and maximum 
-%value of qz at which intensity will be interpolated from the input CCD image.
-%
-%delta_qr -> specify the step size in qr for interpolation. Intensity will
-%be interpolated at every delta_qr between qr_range(1) and qr_range(2).
-%
-%delta_qz -> specify the step size in qz for interpolation. Intensity will
-%be interpolated at every delta_qz between qz_range(1) and qz_range(2).
-%
-%alpha_d -> The angle of incidence in degrees. For a typical WAXS
-%experiment, set alpha_d to a positive value. For a transmission experiment
-%like the one outlined in Jianjun Pan's thesis, set alpha_d to a negative
-%value, e.g. -45 degrees. This sign convention is consistent with the
-%Nagle's rotation motor.
+%Parameters
+%==========
+%img : input CCD image
+%qr_range : qr_range(1) and qr_range(2) specify the minimum and maximum 
+%           value of qr
+%qz_range : qz_range(1) and qz_range(2) specify the minimum and maximum 
+%           value of qz
+%delta_q : specify the step size in q 
+%omega : angle of incidence in degrees 
+%beamX : horizontal beam position
+%beamZ : vertical beam position
+%Sdist : sample to detector distance
+%wavelength : X-ray wavelength
+%pixelSize : pixel size in mm per pixel
 
-function result=transform_ccd2q(imag, qr_range, qz_range, delta_qr, ...
-                                delta_qz, alpha_d, beamX, beamZ)
-global wavelength pixelSize sDist X_cen Y_cen
-if nargin < 7
-  beamX = Y_cen;
-  beamZ = 1024 - X_cen + 1;
-end
-Spec_to_Phos = sDist / pixelSize;
+function result=transform_ccd2q(img, qr_range, qz_range, delta_q, ...
+                                omega, beamX, beamZ, Sdist, wavelength, pixelSize)
+%beamX = Y_cen;
+%beamZ = 1024 - X_cen + 1;
+
+Spec_to_Phos = Sdist / pixelSize;
 X_Lambda = wavelength;
-alpha_r=deg2rad(alpha_d);
+alpha_r=deg2rad(omega);
 
 % Create the grid in qr-qz space. 
 % qr-axis is along the horizontal axis in MATLAB 
 % figure. qz-axis is along the vertical axis in MATLAB figure.
-qr=qr_range(1):delta_qr:qr_range(2);     
+qr=qr_range(1):delta_q:qr_range(2);     
 len_qr=length(qr);
-qz=qz_range(1):delta_qz:qz_range(2);  
+qz=qz_range(1):delta_q:qz_range(2);  
 len_qz=length(qz);
 qr2=repmat(qr,[len_qz,1]);
 qz2=repmat(qz',[1,len_qr]);
@@ -77,7 +70,7 @@ X1 = beamX + Spec_to_Phos*tan_2theta.*sqrt(1-sin_phi.^2);
 Y1 = beamZ + Spec_to_Phos*tan_2theta.*sin_phi;
 
 %Interpolate at the points specified by the above rules.
-Int=interp2(imag,X1,Y1,'spline');
+Int=interp2(img,X1,Y1,'spline');
 
 % Set elements to zero if their specified (qr, qz) points are not accessible
 % or outside the CCD detector.
@@ -95,5 +88,6 @@ Int(D) = 0;
 % plotting might become slow.
 Int = int64(Int);
 
-result = struct('qr',qr,'qz',qz,'Int',Int,'delta_qr',delta_qr,'delta_qz',delta_qz);
+result = struct('qr',qr,'qz',qz,'Int',Int,'delta_qr',delta_q,'delta_qz',delta_q);
+
 end
