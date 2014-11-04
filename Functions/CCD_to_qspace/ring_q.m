@@ -117,8 +117,8 @@ I(D) = 0;
 I_phi = sum(I,2)/length(q);
 
 % Create the output consisting of two column vectors.
-if isrow(q)
-  q = q';
+if isrow(phi)
+  phi = phi';
 end
 if isrow(I_phi)
   I_phi = I_phi';
