@@ -116,6 +116,8 @@ I(D) = 0;
 % function of phi
 I_phi = sum(I,2)/length(q);
 
+plot(phi, I_phi);
+
 % Create the output consisting of two column vectors.
 if isrow(phi)
   phi = phi';
