@@ -35,5 +35,5 @@ if (nargin<3) data_range = [0, size(x,2), 0, size(x,1)]; end
    clf;
    colormap(gray);
    imagesc(double(x).* double(MaskD) + urange(1)*(1.0-double(MaskD)),urange);
-   axis image; axis(data_range); %hold on;
+   axis image; axis xy; axis(data_range); %hold on;
   

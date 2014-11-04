@@ -1,4 +1,4 @@
-%[q, I] = sector_q(img_struct, q_range, phi_range, q_delta, phi_delta);
+%[q, I] = radial_q(img_struct, q_range, phi_range, q_delta, phi_delta);
 %
 %This function returns intensity as a function of q along a constant value
 %of phi on a q-corrected image. The output will contain two column vectors, 
@@ -44,7 +44,7 @@
 %phi is sensitive to the position on the image; very close to the origin,
 %phi resolution is very coarse.
 %   
-function [q, I] = sector_q(img_struct, q_range, phi_range, q_delta, phi_delta)
+function [q, I] = radial_q(img_struct, q_range, phi_range, q_delta, phi_delta)
 % Set phi_range
 if (nargin<3)
     phi_range(1) = 0;  % Start at 0 degrees (horizontal axis going right)

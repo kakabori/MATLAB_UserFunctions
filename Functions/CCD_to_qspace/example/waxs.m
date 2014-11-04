@@ -4,8 +4,6 @@ clear;
 
 % Path to CCD_to_qspace package
 addpath('/home/kiyo/MATLAB_UserFunctions/Functions/CCD_to_qspace');
-% Path to slurp function
-addpath('/home/kiyo/MATLAB_UserFunctions/Functions');
 % Path to rotateAround function
 addpath(genpath('/home/kiyo/MATLAB_UserFunctions/Functions/Downloaded'));
 % Data files
@@ -75,4 +73,4 @@ dlmwrite('ripple_10deg.dat', [q Int]);
 figure
 [phi, Int] = ring_q(q_img, [0 70], [1.3 1.6]);
 dlmwrite('ripple_phi.dat', [phi Int]);
-
+% This one did not work.
