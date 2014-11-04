@@ -73,4 +73,3 @@ dlmwrite('ripple_10deg.dat', [q Int]);
 figure
 [phi, Int] = ring_q(q_img, [0 50], [1.45 1.55]);
 dlmwrite('ripple_phi.dat', [phi Int]);
-% This one did not work.
