@@ -71,6 +71,6 @@ dlmwrite('ripple_10deg.dat', [q Int]);
 
 % Create and save phi swath (annular plot)
 figure
-[phi, Int] = ring_q(q_img, [0 70], [1.3 1.6]);
+[phi, Int] = ring_q(q_img, [0 50], [1.45 1.55]);
 dlmwrite('ripple_phi.dat', [phi Int]);
 % This one did not work.
